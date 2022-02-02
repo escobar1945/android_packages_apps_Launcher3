@@ -156,6 +156,10 @@ public final class Utilities {
             Build.TYPE.toLowerCase(Locale.ROOT).contains("debug") ||
             Build.TYPE.toLowerCase(Locale.ROOT).equals("eng");
 
+    private static final String GSA_PACKAGE = "com.google.android.googlequicksearchbox";
+
+    public static final String KEY_DOCK_SEARCH = "pref_dock_search";
+
     /**
      * Returns true if theme is dark.
      */
@@ -948,8 +952,25 @@ public final class Utilities {
         });
     }
 
+    public static boolean isGSAEnabled(Context context) {
+        try {
+            return context.getPackageManager().getApplicationInfo(GSA_PACKAGE, 0).enabled;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
     public static boolean isWorkspaceEditAllowed(Context context) {
         SharedPreferences prefs = getPrefs(context.getApplicationContext());
         return !prefs.getBoolean(InvariantDeviceProfile.KEY_WORKSPACE_LOCK, false);
+    }
+
+    public static boolean showQSB(Context context) {
+        return isGSAEnabled(context) && isQSBEnabled(context);
+    }
+
+    private static boolean isQSBEnabled(Context context) {
+        SharedPreferences prefs = getPrefs(context.getApplicationContext());
+        return prefs.getBoolean(KEY_DOCK_SEARCH, true);
     }
 }
