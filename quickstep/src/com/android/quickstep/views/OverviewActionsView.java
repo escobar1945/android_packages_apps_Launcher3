@@ -84,6 +84,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
     private static final int INDEX_HIDDEN_FLAGS_ALPHA = 3;
 
     private static final String KEY_RECENTS_SCREENSHOT = "pref_recents_screenshot";
+	private static final String KEY_RECENTS_KILL_APP = "pref_recents_kill_app";
     private static final String KEY_RECENTS_CLEAR_ALL = "pref_recents_clear_all";
     private static final String KEY_RECENTS_LENS = "pref_recents_lens";
     private static final String KEY_RECENTS_LOCK = "pref_recents_lock";
@@ -105,6 +106,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
     private final Rect mTaskSize = new Rect();
 
     private boolean mScreenshot;
+	private boolean mKillApp;
     private boolean mClearAll;
     private boolean mLens;
     private boolean mLock;
@@ -123,6 +125,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
         mMultiValueAlpha.setUpdateVisibility(true);
         SharedPreferences prefs = Utilities.getPrefs(context);
         mScreenshot = prefs.getBoolean(KEY_RECENTS_SCREENSHOT, true);
+		mKillApp = prefs.getBoolean(KEY_RECENTS_KILL_APP, true);
         mClearAll = prefs.getBoolean(KEY_RECENTS_CLEAR_ALL, true);
         mLens = prefs.getBoolean(KEY_RECENTS_LENS, false);
         mLock = prefs.getBoolean(KEY_RECENTS_LOCK, true);
@@ -139,6 +142,11 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
         actionLock.setOnClickListener(this);
         actionLock.setVisibility(mLock ? VISIBLE : GONE);
         findViewById(R.id.action_lock_space).setVisibility(mLock ? VISIBLE : GONE);
+		
+		View killApp = findViewById(R.id.kill_app);
+        killApp.setOnClickListener(this);
+        killApp.setVisibility(mKillApp ? VISIBLE : GONE);
+        findViewById(R.id.kill_app_space).setVisibility(mKillApp ? VISIBLE : GONE);
 
         View clearall = findViewById(R.id.action_clear_all);
         clearall.setOnClickListener(this);
@@ -183,6 +191,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
             mCallbacks.onClearAllTasksRequested();
         } else if (id == R.id.action_lens) {
             mCallbacks.onLens();
+        } else if (id == R.id.kill_app) {
+            mCallbacks.onKillApp();
         }
     }
 
